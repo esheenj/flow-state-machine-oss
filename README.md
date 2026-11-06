@@ -38,6 +38,18 @@ npm test
 
 [See the Recorder guide](docs/RECORD_JOURNALS.md) for synthetic examples, JSON restoration and limitations. IDs are local deduplication keys, not transaction receipts or security credentials.
 
+## New: interactive zero-build browser playground
+
+Try the real library in a fictional support-request UI without installing npm packages or configuring a backend:
+
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1
+```
+
+Open **[localhost:8000/examples/playground.html](http://127.0.0.1:8000/examples/playground.html)** in your browser. Save a fictional subject, attempt guarded transitions, inspect accepted actions as JSON, and restore that journal. The runtime modules now import in native browser ESM; no bundler, credentials, telemetry or external APIs.
+
+[Full playground walkthrough and real Chrome test coverage](docs/BROWSER_PLAYGROUND.md). Existing `npm test`, `npm run demo`, `npm run replay` and `npm run record` remain available; the GitHub Actions PR workflow also verifies the browser interaction using ChromeDriver.
+
 ## Scope
 
 This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. No persistent store, user accounts or deployment is included.
