@@ -1,6 +1,6 @@
 // Original, dependency-free, local-only journal recorder for UI prototypes.
 // Recording does NOT authenticate who initiated an event or grant authority.
-import { isDeepStrictEqual } from "node:util";
+import { equalJSON } from "./equal_json.mjs";
 import { begin, editFields, advance, inspectSnapshot, FlowFault } from "./flow.mjs";
 import { replayJournal, inspectJournalAction } from "./replay.mjs";
 
@@ -39,14 +39,14 @@ export function recordAction(machine, journal, instruction, expectedBefore) {
   const current = replayJournal(machine, journal); // Validates all existing history.
   const previous = journal.actions.find(action => action.id === instruction.id);
   if (previous !== undefined) {
-    if (!isDeepStrictEqual(previous, instruction)) {
+    if (!equalJSON(previous, instruction)) {
       throw new FlowFault("Conflicting replay operation ID");
     }
     return { ok: true, reason: "REPLAY_REUSED", journal, snapshot: current };
   }
   if (expectedBefore !== undefined) {
     inspectSnapshot(machine, expectedBefore);
-    if (!isDeepStrictEqual(current, expectedBefore)) {
+    if (!equalJSON(current, expectedBefore)) {
       throw new FlowFault("Recorder precondition does not match current snapshot");
     }
   }
