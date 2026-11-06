@@ -7,6 +7,8 @@ const id = x => typeof x === "string" && /^[a-z][a-z0-9_]{0,39}$/.test(x);
 const plain = x => x !== null && typeof x === "object" &&
   !Array.isArray(x) && [Object.prototype, null].includes(Object.getPrototypeOf(x));
 const own = (x, key) => Object.prototype.hasOwnProperty.call(x, key);
+const onlyKeys = (x, allowed) => plain(x) &&
+  Object.keys(x).every(key => allowed.includes(key));
 
 function checkValues(values) {
   if (!plain(values) || Object.keys(values).length > 40) throw new FlowFault("Invalid field map");
@@ -18,17 +20,18 @@ function checkValues(values) {
   }
 }
 export function inspectMachine(machine) {
-  if (!plain(machine) || !plain(machine.nodes) || !id(machine.start) ||
+  if (!onlyKeys(machine, ["start", "nodes"]) || !plain(machine.nodes) || !id(machine.start) ||
     !own(machine.nodes, machine.start) || !Object.keys(machine.nodes).length ||
     Object.keys(machine.nodes).length > 32) throw new FlowFault("Invalid workflow definition");
   for (const [name, edges] of Object.entries(machine.nodes)) {
     if (!id(name) || !plain(edges)) throw new FlowFault("Invalid workflow node");
     for (const [event, rule] of Object.entries(edges)) {
-      if (!id(event) || !plain(rule) || !id(rule.to) || !own(machine.nodes, rule.to))
+      if (!id(event) || !onlyKeys(rule, ["to", "require"]) ||
+        !id(rule.to) || !own(machine.nodes, rule.to))
         throw new FlowFault("Unknown transition destination");
       if (own(rule, "require")) {
         const check = rule.require;
-        if (!plain(check) || !id(check.field) ||
+        if (!onlyKeys(check, ["field", "equals", "nonempty"]) || !id(check.field) ||
           (own(check, "equals") === own(check, "nonempty")) ||
           (own(check, "nonempty") && check.nonempty !== true) ||
           (own(check, "equals") && !["string", "boolean", "number"].includes(typeof check.equals)) ||
@@ -46,14 +49,16 @@ export function begin(machine, fields = {}) {
 }
 export function inspectSnapshot(machine, snapshot) {
   inspectMachine(machine);
-  if (!plain(snapshot) || !id(snapshot.at) || !Array.isArray(snapshot.trail) ||
+  if (!onlyKeys(snapshot, ["at", "fields", "trail"]) || !id(snapshot.at) ||
+    !Array.isArray(snapshot.trail) ||
     snapshot.trail.length > 500) throw new FlowFault("Invalid workflow snapshot");
   checkValues(snapshot.fields);
   let cursor = machine.start;
   for (let i = 0; i < snapshot.trail.length; i++) {
     if (!own(snapshot.trail, i)) throw new FlowFault("Sparse history");
     const item = snapshot.trail[i];
-    if (!plain(item) || item.n !== i + 1 || item.from !== cursor ||
+    if (!onlyKeys(item, ["n", "from", "event", "to"]) ||
+      item.n !== i + 1 || item.from !== cursor ||
       !id(item.event) || !id(item.to) || !own(machine.nodes[cursor], item.event) ||
       machine.nodes[cursor][item.event].to !== item.to)
       throw new FlowFault("History does not match machine");
