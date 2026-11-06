@@ -56,3 +56,7 @@ A saved trail may claim `draft → review` while the initial `headline` was empt
 ## Help improve the example
 
 Contributions are welcome when they use synthetic reproduction, clear counterexamples and the existing `npm test` checks. Please do not submit private customer, employer, financial or infrastructure source. Library remains MIT-licensed and `private: true` prevents accidental npm registry publication.
+
+## Immutable capture instead of manually writing the journal
+
+The separate [Recorder guide](RECORD_JOURNALS.md) shows how to record valid local edits and events with stable operation IDs, handle duplicate retries, reject stale state, and replay a JSON save-and-restore cycle. Existing ID-less replay journals remain supported. Stable operation IDs provide only local deduplication; they do not authenticate contributors or make history tamper-proof.
