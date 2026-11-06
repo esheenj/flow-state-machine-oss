@@ -1,7 +1,7 @@
 // Reconstruct a fictional UI journey from edits and accepted events.
 // This replay checks historical guards against recorded inputs, unlike the
 // structure-only snapshot inspection. It cannot authenticate log provenance.
-import { isDeepStrictEqual } from "node:util";
+import { equalJSON } from "./equal_json.mjs";
 import { begin, editFields, advance, inspectMachine, inspectSnapshot, FlowFault } from "./flow.mjs";
 
 const plain = value => value !== null && typeof value === "object" &&
@@ -78,7 +78,7 @@ export function replayJournal(machine, journal, expectedSnapshot) {
   inspectSnapshot(machine, snapshot);
   if (expectedSnapshot !== undefined) {
     inspectSnapshot(machine, expectedSnapshot);
-    if (!isDeepStrictEqual(snapshot, expectedSnapshot)) {
+    if (!equalJSON(snapshot, expectedSnapshot)) {
       throw new FlowFault("Replay does not match expected snapshot");
     }
   }
