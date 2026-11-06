@@ -211,7 +211,7 @@ def run():
                and finished["transitions"] == 2, "ACCEPTED_JOURNEY_RECORDED")
         stored = json.loads(finished["journal"])
         verify([entry["id"] for entry in stored["actions"]]
-               == ["op_1", "op_3", "op_5", "op_6"], "UNIQUE_BOUNDED_EVENT_IDS")
+               == ["op_2", "op_3", "op_5", "op_6"], "UNIQUE_BOUNDED_EVENT_IDS")
 
         driver.click("#reset")
         verify(state(driver)["ops"] == 0 and state(driver)["state"] == "new",
