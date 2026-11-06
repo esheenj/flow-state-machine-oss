@@ -11,19 +11,44 @@ const exactKeys = (value, allowed) => plain(value) &&
   Object.keys(value).length === allowed.length &&
   allowed.every(key => Object.prototype.hasOwnProperty.call(value, key));
 
+const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const identifier = value => typeof value === "string" && /^[a-z][a-z0-9_]{0,39}$/.test(value);
+
+/** Validate one event/edit shape. Legacy actions may omit the optional ID. */
+export function inspectJournalAction(action, requireId = false) {
+  if (!plain(action) || !["edit", "event"].includes(action.kind))
+    throw new FlowFault("Invalid replay action");
+  const required = action.kind === "edit" ? ["kind", "patch"] : ["kind", "event"];
+  const hasId = own(action, "id");
+  const keys = Object.keys(action);
+  if ((requireId && !hasId) || (hasId && !identifier(action.id)) ||
+      keys.length !== required.length + Number(hasId) ||
+      !required.every(key => own(action, key)) ||
+      !keys.every(key => required.includes(key) || key === "id")) {
+    throw new FlowFault("Invalid replay action fields");
+  }
+  if (action.kind === "event" && !identifier(action.event)) {
+    throw new FlowFault("Invalid replay event");
+  }
+  if (action.kind === "edit" && !plain(action.patch)) {
+    throw new FlowFault("Invalid field edit");
+  }
+  return true;
+}
 
 /**
  * Replay a strictly shaped JSON journal through the same guarded state machine.
  *
  * Journal: {version:1, initial:{...}, actions:[{kind:"edit",patch:{...}},
  *                                          {kind:"event",event:"submit"}]}
- * An optional expected snapshot must agree with the reconstructed fields, state
- * and trail. Rejection does not modify journal, machine or expected snapshot.
+ * Actions may optionally have a unique {id:"original_request_id"}; older
+ * journals without IDs continue to work. Duplicate IDs are rejected.
  *
- * Do not treat this as authenticated logging or as permission to act on a
- * server. Attackers who control the journal can still construct another
- * internally consistent journey.
+ * An optional expected snapshot must agree with the reconstructed fields,
+ * state and trail. Rejection does not modify the caller's objects.
+ *
+ * Do not treat this as authenticated logging or permission to act on a server.
+ * Attackers controlling the journal can create a consistent different history.
  */
 export function replayJournal(machine, journal, expectedSnapshot) {
   inspectMachine(machine);
@@ -33,24 +58,21 @@ export function replayJournal(machine, journal, expectedSnapshot) {
     throw new FlowFault("Invalid replay journal");
   }
   let snapshot = begin(machine, journal.initial);
+  const seen = new Set();
   for (let i = 0; i < journal.actions.length; i++) {
-    if (!Object.prototype.hasOwnProperty.call(journal.actions, i)) {
-      throw new FlowFault("Sparse replay history");
-    }
+    if (!own(journal.actions, i)) throw new FlowFault("Sparse replay history");
     const action = journal.actions[i];
-    if (!plain(action)) throw new FlowFault("Invalid replay action");
+    inspectJournalAction(action);
+    if (own(action, "id")) {
+      if (seen.has(action.id)) throw new FlowFault("Duplicate replay operation ID");
+      seen.add(action.id);
+    }
     if (action.kind === "edit") {
-      if (!exactKeys(action, ["kind", "patch"])) throw new FlowFault("Invalid field edit");
       snapshot = editFields(machine, snapshot, action.patch);
-    } else if (action.kind === "event") {
-      if (!exactKeys(action, ["kind", "event"]) || !identifier(action.event)) {
-        throw new FlowFault("Invalid replay event");
-      }
+    } else {
       const result = advance(machine, snapshot, action.event);
       if (!result.ok) throw new FlowFault("Rejected transition in replay: " + result.reason);
       snapshot = result.snapshot;
-    } else {
-      throw new FlowFault("Unknown replay action");
     }
   }
   inspectSnapshot(machine, snapshot);
