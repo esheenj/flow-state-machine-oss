@@ -26,8 +26,20 @@ npm test
 
 This demonstrates a **second fictional support-request journey** and safe local restoration. See [the guarded journal replay guide](docs/REPLAY_JOURNALS.md) for code, limitations and negative cases. The original `npm run demo` remains unchanged.
 
+## New: immutable recording with safe retry
+
+The companion `createJournal(machine, initial)` and `recordAction(machine, journal, instruction, expectedBefore?)` build a replayable journey without writing event JSON by hand. Each accepted edit or event gets a **stable ID** so a repeated request can reuse its original entry, while a conflicting retry or stale state is rejected. Invalid guards leave the original journal unchanged.
+
+```sh
+npm run record
+npm run replay
+npm test
+```
+
+[See the Recorder guide](docs/RECORD_JOURNALS.md) for synthetic examples, JSON restoration and limitations. IDs are local deduplication keys, not transaction receipts or security credentials.
+
 ## Scope
 
-This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. It verifies the *structure* of stored transitions, not historical guard decisions. History is capped at 500 accepted transitions. No persistent store, user accounts or deployment is included.
+This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. No persistent store, user accounts or deployment is included.
 
 Contributions should contain original code and fictional examples only. Please do not submit employer, customer or private project material. Distributed as MIT-licensed source; npm registry publication is disabled by `private: true`.
