@@ -19,3 +19,4 @@ jobs:
       - run: npm test
       - run: npm run demo
       - run: npm run replay
+      - run: npm run record
