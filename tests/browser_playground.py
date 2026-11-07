@@ -19,7 +19,7 @@ import time
 import urllib.error
 import urllib.request
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("FLOW_PLAYGROUND_ROOT", Path(__file__).resolve().parents[1])).resolve()
 
 
 def verify(value: bool, label: str):

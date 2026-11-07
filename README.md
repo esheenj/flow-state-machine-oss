@@ -50,6 +50,8 @@ Open **[localhost:8000/examples/playground.html](http://127.0.0.1:8000/examples/
 
 [Full playground walkthrough and real Chrome test coverage](docs/BROWSER_PLAYGROUND.md). Existing `npm test`, `npm run demo`, `npm run replay` and `npm run record` remain available; the GitHub Actions PR workflow also verifies the browser interaction using ChromeDriver.
 
+For one-click public access, see the [verified-source GitHub Pages release process](docs/PAGES_RELEASE.md). A hosted demo URL will be advertised only after GitHub Pages is enabled and real HTTPS/browser checks confirm deployment; the local playground above already works.
+
 ## Scope
 
 This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. No persistent store, user accounts or deployment is included.
