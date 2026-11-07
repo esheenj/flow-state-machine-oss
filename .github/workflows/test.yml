@@ -34,5 +34,10 @@ jobs:
           python3 --version
           google-chrome --version
           "$CHROMEWEBDRIVER/chromedriver" --version
-      - name: Exercise real browser workflow through WebDriver
-        run: python3 tests/browser_playground.py
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Stage exact minimal public Pages artifact
+        run: node scripts/stage_pages.mjs dist/pages
+      - name: Exercise staged public site through real WebDriver
+        run: FLOW_PLAYGROUND_ROOT=dist/pages python3 tests/browser_playground.py
