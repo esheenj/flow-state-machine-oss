@@ -41,7 +41,7 @@ test("pages bundle contains only the 7 synthetic public files and .nojekyll", as
     assert.match(home, /not authenticate|not authenticate its author|does not authenticate/i);
     assert.match(playground, /src="\.\/playground\.mjs"/);
     assert.doesNotMatch(home, /<script\b/);
-    assert.doesNotMatch(home, /analytics|googletagmanager|track\.js/i);
+    assert.doesNotMatch(home, /<script\b|<iframe\b|<img\b|googletagmanager\.com|src="https?:/i);
     assert.doesNotMatch(playground, /https?:\/\/.+\.js/);
   } finally { await rm(temp, { recursive: true, force: true }); }
 });
