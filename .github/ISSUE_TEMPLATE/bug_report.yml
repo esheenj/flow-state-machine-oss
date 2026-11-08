@@ -1,0 +1,33 @@
+name: "Flow behavior bug (fictional data)"
+description: Report a reproducible transition or replay issue with invented inputs
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: "Only include synthetic examples; never include real customer data, hidden prompts, financial records, secrets or private tool instructions."
+  - type: input
+    id: revision
+    attributes:
+      label: Exact source revision and Node/browser version
+      placeholder: "main SHA; Node 22; Chrome if UI"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal synthetic machine, journal and action sequence
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Expected versus actual state, journal and reason
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests performed and missing
+      description: npm test, replay, record and Chrome when relevant
+    validations:
+      required: true
