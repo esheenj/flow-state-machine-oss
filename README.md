@@ -52,6 +52,10 @@ Open **[localhost:8000/examples/playground.html](http://127.0.0.1:8000/examples/
 
 For one-click public access, see the [verified-source GitHub Pages release process](docs/PAGES_RELEASE.md). A hosted demo URL will be advertised only after GitHub Pages is enabled and real HTTPS/browser checks confirm deployment; the local playground above already works.
 
+## Contribute a small tested improvement
+
+New developers can follow [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped good first tasks](docs/GOOD_FIRST_ISSUES.md). The repository now has a structured bug-report form and PR checklist. Start from a fictional guard/retry example, add one deterministic test and run `npm test`, `npm run replay` and `npm run record`. For browser changes, test the allowlisted staged playground with real Chrome. No live Pages URL is claimed until deployment and HTTPS acceptance succeed.
+
 ## Scope
 
 This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. No persistent store, user accounts or deployment is included.
