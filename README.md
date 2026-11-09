@@ -1,6 +1,6 @@
 # Flow State Machine
 
-**[Open the GitHub-deployed workflow/journal playground](https://esheenj.github.io/flow-state-machine-oss/)** — [GitHub Pages deployment](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42476242503) succeeded on **9 November 2026**. Independent external HTTPS/browser verification is still pending; please report any rendering problems in GitHub Issues.
+**[Open the GitHub-deployed workflow/journal playground](https://esheenj.github.io/flow-state-machine-oss/)** — [GitHub Pages deployment](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42580396953) and live HTTPS browser smoke verified on **9 November 2026**. Try the fictional guard, journal and restore journey.
 
 A small, **offline JavaScript state-machine library** for learning about deterministic UI journeys, guarded transitions and validating a serialized history. Entirely synthetic; no accounts, network APIs or dependencies.
 
@@ -52,14 +52,14 @@ Open **[localhost:8000/examples/playground.html](http://127.0.0.1:8000/examples/
 
 [Full playground walkthrough and real Chrome test coverage](docs/BROWSER_PLAYGROUND.md). Existing `npm test`, `npm run demo`, `npm run replay` and `npm run record` remain available; the GitHub Actions PR workflow also verifies the browser interaction using ChromeDriver.
 
-For one-click public access, see the [verified-source GitHub Pages release process](docs/PAGES_RELEASE.md). GitHub Pages has now deployed the URL above; independent HTTPS/browser testing remains pending; the local playground above already works.
+For one-click public access, see the [verified-source GitHub Pages release process](docs/PAGES_RELEASE.md). The live browser evidence and its limits are recorded in that guide.
 
 ## Contribute a small tested improvement
 
-New developers can follow [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped good first tasks](docs/GOOD_FIRST_ISSUES.md). The repository now has a structured bug-report form and PR checklist. Start from a fictional guard/retry example, add one deterministic test and run `npm test`, `npm run replay` and `npm run record`. For browser changes, test the allowlisted staged playground with real Chrome. The GitHub Pages deployment succeeded; independent external-browser acceptance remains pending.
+New developers can follow [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped good first tasks](docs/GOOD_FIRST_ISSUES.md). The repository now has a structured bug-report form and PR checklist. Start from a fictional guard/retry example, add one deterministic test and run `npm test`, `npm run replay` and `npm run record`. For browser changes, test the allowlisted staged playground with real Chrome.
 
 ## Scope
 
-This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. No persistent store, user accounts or deployment is included.
+This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. The demo has no persistent store or user accounts; the public deployment serves static files only.
 
 Contributions should contain original code and fictional examples only. Please do not submit employer, customer or private project material. Distributed as MIT-licensed source; npm registry publication is disabled by `private: true`.
