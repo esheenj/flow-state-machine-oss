@@ -1,6 +1,6 @@
 # Publishing the public browser playground with GitHub Pages
 
-**Deployment status (9 November 2026):** [GitHub Actions run 42476242503](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42476242503) successfully deployed this public-source Pages bundle to [https://esheenj.github.io/flow-state-machine-oss/](https://esheenj.github.io/flow-state-machine-oss/). That link comes from GitHub's actual deployment receipt, not a guess. Independent external HTTPS/browser acceptance remains pending.
+**Verified public release (9 November 2026):** [deployment run 42580396953](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42580396953) published source `aeb3815d14b2cca00d301115e6dd6f6e9788c973` to the [live Pages site](https://esheenj.github.io/flow-state-machine-oss/). A separate Chrome browser opened the actual HTTPS playground, observed the empty-subject guard reject without recording an action, resolved a fictional request (four accepted actions, two transitions), and restored its journal after reset. This smoke did not audit network traffic, screen-reader announcements, mobile hardware, or accessibility conformance.
 
 This repository has a **zero-build fictional workflow demo** in
 `examples/playground.html`. The public website bundle is intentionally limited to
