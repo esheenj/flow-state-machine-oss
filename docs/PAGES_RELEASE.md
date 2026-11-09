@@ -1,5 +1,7 @@
 # Publishing the public browser playground with GitHub Pages
 
+**Deployment status (9 November 2026):** [GitHub Actions run 42476242503](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42476242503) successfully deployed this public-source Pages bundle to [https://esheenj.github.io/flow-state-machine-oss/](https://esheenj.github.io/flow-state-machine-oss/). That link comes from GitHub's actual deployment receipt, not a guess. Independent external HTTPS/browser acceptance remains pending.
+
 This repository has a **zero-build fictional workflow demo** in
 `examples/playground.html`. The public website bundle is intentionally limited to
 the landing page, browser demo and four required MIT-licensed source modules.

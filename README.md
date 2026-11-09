@@ -1,5 +1,7 @@
 # Flow State Machine
 
+**[Open the GitHub-deployed workflow/journal playground](https://esheenj.github.io/flow-state-machine-oss/)** — [GitHub Pages deployment](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42476242503) succeeded on **9 November 2026**. Independent external HTTPS/browser verification is still pending; please report any rendering problems in GitHub Issues.
+
 A small, **offline JavaScript state-machine library** for learning about deterministic UI journeys, guarded transitions and validating a serialized history. Entirely synthetic; no accounts, network APIs or dependencies.
 
 ## Run
@@ -50,11 +52,11 @@ Open **[localhost:8000/examples/playground.html](http://127.0.0.1:8000/examples/
 
 [Full playground walkthrough and real Chrome test coverage](docs/BROWSER_PLAYGROUND.md). Existing `npm test`, `npm run demo`, `npm run replay` and `npm run record` remain available; the GitHub Actions PR workflow also verifies the browser interaction using ChromeDriver.
 
-For one-click public access, see the [verified-source GitHub Pages release process](docs/PAGES_RELEASE.md). A hosted demo URL will be advertised only after GitHub Pages is enabled and real HTTPS/browser checks confirm deployment; the local playground above already works.
+For one-click public access, see the [verified-source GitHub Pages release process](docs/PAGES_RELEASE.md). GitHub Pages has now deployed the URL above; independent HTTPS/browser testing remains pending; the local playground above already works.
 
 ## Contribute a small tested improvement
 
-New developers can follow [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped good first tasks](docs/GOOD_FIRST_ISSUES.md). The repository now has a structured bug-report form and PR checklist. Start from a fictional guard/retry example, add one deterministic test and run `npm test`, `npm run replay` and `npm run record`. For browser changes, test the allowlisted staged playground with real Chrome. No live Pages URL is claimed until deployment and HTTPS acceptance succeed.
+New developers can follow [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped good first tasks](docs/GOOD_FIRST_ISSUES.md). The repository now has a structured bug-report form and PR checklist. Start from a fictional guard/retry example, add one deterministic test and run `npm test`, `npm run replay` and `npm run record`. For browser changes, test the allowlisted staged playground with real Chrome. The GitHub Pages deployment succeeded; independent external-browser acceptance remains pending.
 
 ## Scope
 
