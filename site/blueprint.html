@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="description" content="Offline fictional service blueprint sketch with touchpoints, frontstage, backstage, dependencies and handoff flags.">
+<title>Service Blueprint Studio · Esheen Labs</title>
+<style>
+:root{font:16px/1.55 system-ui,sans-serif;color-scheme:light dark}
+*{box-sizing:border-box}
+body{margin:0;background:Canvas;color:CanvasText}
+main{max-width:70rem;margin:auto;padding:clamp(1rem,4vw,3rem)}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.1}
+p{max-width:72ch}
+a{color:LinkText}
+section{border:1px solid GrayText;border-radius:1rem;margin:1rem 0;padding:clamp(1rem,3vw,1.6rem);min-width:0}
+textarea{width:100%;min-height:24rem;padding:1rem;background:Canvas;color:CanvasText;border:1px solid GrayText;border-radius:.6rem;font:.84rem/1.5 ui-monospace,monospace;resize:vertical}
+button{font:inherit;min-height:48px;padding:.6rem 1rem;background:Canvas;color:CanvasText;border:1px solid GrayText;border-radius:.6rem;cursor:pointer}
+.actions{display:flex;flex-wrap:wrap;gap:.8rem;margin:1rem 0}
+#rows{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:1rem}
+#rows li{padding:1rem;border:1px solid GrayText;border-radius:.7rem;min-width:0;overflow-wrap:anywhere}
+#rows strong{font-size:1.1rem}
+#rows li p{margin:.5rem 0}
+#status{font-weight:700}
+:focus-visible{outline:3px solid Highlight;outline-offset:3px}
+[hidden]{display:none!important}
+</style>
+<script type="module" src="./src/service-blueprint-ui.mjs"></script>
+</head><body><main>
+<p><a href="./">Back to Flow State Machine</a></p>
+<p>Esheen Labs · original fictional educational worksheet</p>
+<h1>See what happens behind a service.</h1>
+<p>Map mock customer touchpoints, visible steps, backstage work, dependencies and manual handoffs. Try editing invented wait times to find illustrative friction. Never paste actual client or organizational process records.</p>
+<section><h2>1. Describe an imaginary service</h2>
+<label for="input">Fictional JSON blueprint (2–8 stages)</label>
+<textarea id="input" spellcheck="false"></textarea>
+<div class="actions"><button id="map" type="button">Evaluate service blueprint</button><button id="reset" type="button">Restore example</button></div>
+<p id="status" role="status" aria-live="polite"></p>
+</section>
+<section id="output" hidden><h2>2. Inspect frontstage, backstage and handoffs</h2>
+<p id="wait"></p>
+<ol id="rows"></ol>
+<p>Next: observe an authorized actual service handoff and validate all claimed timings.</p></section>
+<section><h2>Evidence boundary</h2><p>No measured customers, network, telemetry, accounts, upload, credentials or actual execution. Heuristics are not evidence of business performance or production readiness. <a href="https://github.com/esheenj/flow-state-machine-oss">Open source and tests</a>.</p></section>
+</main></body></html>
