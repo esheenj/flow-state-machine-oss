@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="description" content="An entirely fictional agent approval workflow with explicit denies, recovery, and no tool execution.">
+<title>Agent Approval Gates · Esheen Labs</title>
+<style>
+:root{font:16px/1.55 system-ui,sans-serif;color-scheme:light dark}
+*{box-sizing:border-box}
+body{background:Canvas;color:CanvasText;margin:0}
+main{max-width:64rem;margin:0 auto;padding:clamp(1rem,4vw,3rem)}
+h1{font-size:clamp(2rem,5vw,3.15rem);line-height:1.1}
+p{max-width:75ch}
+a{color:LinkText}
+section{border:1px solid GrayText;border-radius:1rem;padding:clamp(1rem,3vw,1.6rem);margin:1rem 0;min-width:0}
+label{display:block;font-weight:700;margin:.5rem 0}
+select{display:block;width:100%;max-width:28rem;font:inherit;padding:.8rem;background:Canvas;color:CanvasText;border:1px solid GrayText;border-radius:.5rem;min-height:48px}
+button{padding:.7rem 1rem;min-height:48px;font:inherit;border:1px solid GrayText;border-radius:.5rem;background:Canvas;color:CanvasText;cursor:pointer}
+.actions{display:flex;gap:.7rem;flex-wrap:wrap;margin:1rem 0}
+:focus-visible{outline:3px solid Highlight;outline-offset:3px}
+#state{font-weight:850;font-size:1.65rem}
+#counts{font-weight:650}
+#events{padding-left:1.5rem}
+#events li{padding:.55rem 0;border-bottom:1px solid GrayText;overflow-wrap:anywhere}
+#events p{margin:.2rem 0}
+#notice{font-weight:700}
+</style>
+<script type="module" src="./src/agent-approval-ui.mjs"></script>
+</head><body><main>
+<p><a href="./">Back to Flow State Machine</a></p>
+<p>Esheen Labs / original offline public demo</p>
+<h1>Approve, deny, recover. Never secretly execute.</h1>
+<p>This fictional agent policy lab teaches why a simulated action needs an explicit decision, why a non-read operation can remain denied after approval, and how denied tasks return to review. No API, real reviewer identity or production tool is connected.</p>
+<section><h2>1. Choose a fictional request</h2>
+<label for="operation">Operation under review</label>
+<select id="operation">
+<option value="READ_FIXTURE">Inspect an invented local fixture (teaching-only)</option>
+<option value="WRITE_SIMULATION">Request a fictional write (always denied)</option>
+<option value="TRANSFER_SIMULATION">Request a fictional transfer (always denied)</option>
+</select>
+<div class="actions">
+<button id="simulate" type="button">Try simulated run</button>
+<button id="approve" type="button">Approve scenario</button>
+<button id="deny" type="button">Deny scenario</button>
+<button id="reopen" type="button">Reopen denied scenario</button>
+<button id="reset" type="button">Reset fictional example</button>
+</div>
+<p id="notice" role="status" aria-live="polite"></p></section>
+<section><h2>2. Read the state and outcomes</h2>
+<p id="state" aria-label="Simulated review state"></p>
+<p id="counts"></p>
+<h3>Decision history</h3><ol id="events"></ol>
+</section>
+<section><h2>Security and authority boundary</h2>
+<p>This is a local, reversible display simulation only. A click is not an authenticated human decision; approved state is not authority to execute. The model rejects invalid replay, conflicting IDs and impossible transitions. It does not inspect, write, trade, transfer, read secrets, send analytics or open network connections. <a href="https://github.com/esheenj/flow-state-machine-oss">Read the original MIT source and tests.</a></p>
+</section>
+</main></body></html>
