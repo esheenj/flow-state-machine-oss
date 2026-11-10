@@ -63,3 +63,9 @@ New developers can follow [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped goo
 This is an illustrative client-side model, **not** a security authorization system, durable workflow scheduler or tamper-proof audit log. The snapshot inspector checks the *structure* of stored transitions; the replay/recorder APIs additionally re-evaluate guards against recorded inputs but cannot establish historical authenticity. History is capped at 500 accepted transitions. The demo has no persistent store or user accounts; the public deployment serves static files only.
 
 Contributions should contain original code and fictional examples only. Please do not submit employer, customer or private project material. Distributed as MIT-licensed source; npm registry publication is disabled by `private: true`.
+
+## Additional browser MVP: Journey Map Studio
+
+[Open the fictional Journey Map Studio](https://esheenj.github.io/flow-state-machine-oss/journey.html) to describe up to ten invented experience steps, stage handoffs, subjective effort, emotion and help availability. The `src/journey-map.mjs` model validates inputs and returns deterministic observable **heuristic** flags; `src/journey-map-ui.mjs` uses native semantic controls and DOM text nodes only. The project's exact-file Pages stager now includes this tool, with Node negative tests and staged real Chrome checks.
+
+It is **not** actual journey research, measurement of abandonment, an accessibility audit or a new standalone repository. No actual user records, telemetry, remote service or extra dependencies; original fictional examples only. Browser code and public GitHub Pages publisher are separate checks from real external acceptance.
