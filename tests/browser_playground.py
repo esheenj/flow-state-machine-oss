@@ -302,6 +302,60 @@ def run():
             return document.querySelector('meta[http-equiv="Content-Security-Policy"]')
               .content.includes("connect-src 'none'");
         """) is True,"JOURNEY_MAP_OFFLINE_CSP")
+        # Exercise the independent staged Service Blueprint Studio using fictional data.
+        driver.cmd("POST", "url", {"url": f"http://127.0.0.1:{server.server_port}/blueprint.html"})
+        for _ in range(50):
+            loaded=driver.js("return document.getElementById('status')?.textContent || '';")
+            if str(loaded).startswith("3 fictional service"):
+                break
+            time.sleep(0.2)
+        else:
+            raise AssertionError("BLUEPRINT_MODULE_NOT_READY")
+        baseline=driver.js("""
+            return {
+              status:document.querySelector('#status').textContent,
+              wait:document.querySelector('#wait').textContent,
+              cards:document.querySelectorAll('#rows li').length,
+              html:document.querySelectorAll('#rows img').length,
+              resources:performance.getEntriesByType('resource').some(x=>!x.name.startsWith(location.origin+'/'))
+            };
+        """)
+        verify("3 illustrative flags" in baseline["status"] and baseline["cards"]==3
+               and "38 minutes" in baseline["wait"] and baseline["html"]==0
+               and baseline["resources"] is False,"BLUEPRINT_FICTIONAL_BASELINE")
+        injection=driver.js("""
+            const el=document.querySelector('#input');
+            const x=JSON.parse(el.value);
+            x[0].frontstage='<img src=x onerror=alert(1)>';
+            el.value=JSON.stringify(x);
+            document.querySelector('#map').click();
+            return {
+              imgs:document.querySelectorAll('#rows img').length,
+              text:document.querySelector('#rows li').textContent
+            };
+        """)
+        verify(injection["imgs"]==0 and '<img src=x onerror=alert(1)>' in injection["text"],
+               "BLUEPRINT_UNTRUSTED_TEXT_INERT")
+        bad=driver.js("""
+            document.querySelector('#input').value='[{"id":"bad","frontstage":"unknown"}]';
+            document.querySelector('#map').click();
+            return {
+              status:document.querySelector('#status').textContent,
+              hidden:document.querySelector('#output').hidden,
+              count:document.querySelectorAll('#rows li').length
+            };
+        """)
+        verify(bad["status"].startswith("Rejected:") and bad["hidden"] is True
+               and bad["count"]==0,"BLUEPRINT_INVALID_REJECTED")
+        driver.click("#reset")
+        verify(driver.js("return document.activeElement.id;")=="input","BLUEPRINT_RESET_FOCUS")
+        driver.viewport(320,720)
+        verify(driver.js("return document.documentElement.scrollWidth<=innerWidth;") is True,
+               "BLUEPRINT_320_LAYOUT")
+        verify(driver.js("""
+            return document.querySelector('meta[http-equiv="Content-Security-Policy"]')
+              .content.includes("connect-src 'none'");
+        """) is True,"BLUEPRINT_OFFLINE_CSP")
         return {
             "schema": "flow-browser-smoke.v1",
             "state": "PASSED",
@@ -318,6 +372,7 @@ def run():
                 "computed_light_and_dark_themes",
                 "no_external_resources",
                 "journey_map_fictional_flags_inert_text_rejection_mobile",
+                "service_blueprint_fictional_handoff_inert_text_rejection_mobile",
             ],
             "screen_reader_tested": False,
             "wcag_certified": False,
