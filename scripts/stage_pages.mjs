@@ -7,6 +7,9 @@ import { fileURLToPath } from "node:url";
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const files = Object.freeze([
   ["site/index.html", "index.html"],
+  ["site/journey.html", "journey.html"],
+  ["src/journey-map.mjs", "src/journey-map.mjs"],
+  ["src/journey-map-ui.mjs", "src/journey-map-ui.mjs"],
   ["examples/playground.html", "examples/playground.html"],
   ["examples/playground.mjs", "examples/playground.mjs"],
   ["src/flow.mjs", "src/flow.mjs"],
@@ -63,6 +66,11 @@ export async function stagePages(outputPath) {
   const html = await readFile(join(out, "index.html"), "utf8");
   if (!html.includes('href="./examples/playground.html"'))
     fail("LANDING_LINK_BROKEN");
+  const mapPage=await readFile(join(out, "journey.html"), "utf8");
+  const mapUI=await readFile(join(out, "src/journey-map-ui.mjs"), "utf8");
+  if(!html.includes('href="./journey.html"')||!mapPage.includes('src="./src/journey-map-ui.mjs"')||
+     !mapUI.includes('"./journey-map.mjs"')||!mapPage.includes("connect-src 'none'"))
+    fail("JOURNEY_MAP_LINK_OR_CSP");
   const app = await readFile(join(out, "examples/playground.mjs"), "utf8");
   if (!app.includes('../src/record.mjs') || !app.includes('../src/replay.mjs'))
     fail("MODULE_IMPORTS_MISSING");

@@ -8,7 +8,7 @@ import { stagePages } from "../scripts/stage_pages.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const expected = [
-  ".nojekyll", "index.html", "examples/playground.html",
+  ".nojekyll", "index.html", "journey.html", "src/journey-map.mjs", "src/journey-map-ui.mjs", "examples/playground.html",
   "examples/playground.mjs", "src/flow.mjs", "src/equal_json.mjs",
   "src/replay.mjs", "src/record.mjs",
 ].sort();
@@ -22,7 +22,7 @@ test("pages bundle contains only the 7 synthetic public files and .nojekyll", as
     assert.equal(report.status, "STAGED");
     assert.equal(report.publicSyntheticOnly, true);
     assert.deepEqual(report.files, expected);
-    assert.equal((await readdir(path)).length, 4); // .nojekyll, index, examples, src
+    assert.equal((await readdir(path)).length, 5); // .nojekyll, index, journey, examples, src
     for (const name of expected) {
       const stat = await lstat(join(path, name));
       assert.equal(stat.isFile(), true);
@@ -38,6 +38,10 @@ test("pages bundle contains only the 7 synthetic public files and .nojekyll", as
     const home = await readFile(join(path, "index.html"), "utf8");
     const playground = await readFile(join(path, "examples/playground.html"), "utf8");
     assert.match(home, /href="\.\/examples\/playground\.html"/);
+    assert.match(home, /href="\.\/journey\.html"/);
+    const journey = await readFile(join(path, "journey.html"), "utf8");
+    assert.match(journey, /src="\.\/src\/journey-map-ui\.mjs"/);
+    assert.match(journey, /connect-src 'none'/);
     assert.match(home, /not authenticate|not authenticate its author|does not authenticate/i);
     assert.match(playground, /src="\.\/playground\.mjs"/);
     assert.doesNotMatch(home, /<script\b/);

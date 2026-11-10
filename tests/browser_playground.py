@@ -251,6 +251,57 @@ def run():
                    "THEME_" + scheme)
             theme_bg.append(values["background"])
         verify(theme_bg[0] != theme_bg[1], "LIGHT_DARK_BACKGROUND")
+        # Exercise the independent staged Journey Map Studio with original fictional data.
+        driver.cmd("POST", "url", {"url": f"http://127.0.0.1:{server.server_port}/journey.html"})
+        for _ in range(50):
+            loaded=driver.js("return document.getElementById('status')?.textContent || '';")
+            if str(loaded).startswith("Mapped "):
+                break
+            time.sleep(0.2)
+        else:
+            raise AssertionError("JOURNEY_MAP_MODULE_NOT_READY")
+        initial=driver.js("""
+            return {
+              status:document.querySelector('#status').textContent,
+              effort:document.querySelector('#effort').textContent,
+              cards:document.querySelectorAll('#steps li').length,
+              flags:[...document.querySelectorAll('#steps li p:last-child')].map(x=>x.textContent),
+              resources:performance.getEntriesByType('resource').some(x=>!x.name.startsWith(location.origin+'/'))
+            };
+        """)
+        verify("4 illustrative friction signals" in initial["status"]
+               and initial["effort"] == "2.33 / 5 average effort"
+               and initial["cards"] == 3 and initial["resources"] is False,
+               "JOURNEY_MAP_FICTIONAL_PATH")
+        injected=driver.js("""
+            const el=document.getElementById('input');
+            const fixture=JSON.parse(el.value);
+            fixture[0].label='<img src=x onerror=alert(1)>';
+            el.value=JSON.stringify(fixture);
+            document.getElementById('map').click();
+            return document.querySelectorAll('#steps img').length;
+        """)
+        verify(injected==0,"JOURNEY_MAP_UNTRUSTED_TEXT_INERT")
+        invalid=driver.js("""
+            document.getElementById('input').value='[{"id":"bad","stage":"invalid"}]';
+            document.getElementById('map').click();
+            return {
+              status:document.getElementById('status').textContent,
+              hidden:document.getElementById('summary').hidden,
+              count:document.querySelectorAll('#steps li').length
+            };
+        """)
+        verify(invalid["status"].startswith("Rejected:") and invalid["hidden"] is True
+               and invalid["count"]==0,"JOURNEY_MAP_INVALID_REJECTED")
+        driver.click("#reset")
+        verify(driver.js("return document.activeElement.id;")=="input","JOURNEY_MAP_RESET_FOCUS")
+        driver.viewport(320,720)
+        verify(driver.js("return document.documentElement.scrollWidth<=innerWidth;") is True,
+               "JOURNEY_MAP_320_LAYOUT")
+        verify(driver.js("""
+            return document.querySelector('meta[http-equiv="Content-Security-Policy"]')
+              .content.includes("connect-src 'none'");
+        """) is True,"JOURNEY_MAP_OFFLINE_CSP")
         return {
             "schema": "flow-browser-smoke.v1",
             "state": "PASSED",
@@ -266,6 +317,7 @@ def run():
                 "responsive_375_and_1440",
                 "computed_light_and_dark_themes",
                 "no_external_resources",
+                "journey_map_fictional_flags_inert_text_rejection_mobile",
             ],
             "screen_reader_tested": False,
             "wcag_certified": False,
