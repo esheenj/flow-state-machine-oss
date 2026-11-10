@@ -8,6 +8,9 @@ const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const files = Object.freeze([
   ["site/index.html", "index.html"],
   ["site/journey.html", "journey.html"],
+  ["site/blueprint.html", "blueprint.html"],
+  ["src/service-blueprint.mjs", "src/service-blueprint.mjs"],
+  ["src/service-blueprint-ui.mjs", "src/service-blueprint-ui.mjs"],
   ["src/journey-map.mjs", "src/journey-map.mjs"],
   ["src/journey-map-ui.mjs", "src/journey-map-ui.mjs"],
   ["examples/playground.html", "examples/playground.html"],
@@ -71,6 +74,11 @@ export async function stagePages(outputPath) {
   if(!html.includes('href="./journey.html"')||!mapPage.includes('src="./src/journey-map-ui.mjs"')||
      !mapUI.includes('"./journey-map.mjs"')||!mapPage.includes("connect-src 'none'"))
     fail("JOURNEY_MAP_LINK_OR_CSP");
+  const blueprint=await readFile(join(out, "blueprint.html"), "utf8");
+  const blueprintUI=await readFile(join(out, "src/service-blueprint-ui.mjs"), "utf8");
+  if(!html.includes('href="./blueprint.html"')||!blueprint.includes('src="./src/service-blueprint-ui.mjs"')||
+     !blueprintUI.includes('"./service-blueprint.mjs"')||!blueprint.includes("connect-src 'none'"))
+    fail("BLUEPRINT_LINK_OR_CSP");
   const app = await readFile(join(out, "examples/playground.mjs"), "utf8");
   if (!app.includes('../src/record.mjs') || !app.includes('../src/replay.mjs'))
     fail("MODULE_IMPORTS_MISSING");

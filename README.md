@@ -69,3 +69,9 @@ Contributions should contain original code and fictional examples only. Please d
 [Open the fictional Journey Map Studio](https://esheenj.github.io/flow-state-machine-oss/journey.html) to describe up to ten invented experience steps, stage handoffs, subjective effort, emotion and help availability. The `src/journey-map.mjs` model validates inputs and returns deterministic observable **heuristic** flags; `src/journey-map-ui.mjs` uses native semantic controls and DOM text nodes only. The project's exact-file Pages stager now includes this tool, with Node negative tests and staged real Chrome checks.
 
 It is **not** actual journey research, measurement of abandonment, an accessibility audit or a new standalone repository. No actual user records, telemetry, remote service or extra dependencies; original fictional examples only. Browser code and public GitHub Pages publisher are separate checks from real external acceptance.
+
+## Additional browser MVP: Service Blueprint Studio
+
+[Open the fictional Service Blueprint Studio](https://esheenj.github.io/flow-state-machine-oss/blueprint.html) to model invented customer touchpoints, frontstage interactions, backstage operations, dependency mapping and estimated manual-handoff delays. `src/service-blueprint.mjs` is a strict, immutable 2–8-step model with explicit negative tests. Native semantic controls and safe DOM text rendering provide interactive review offline. The exact-file GitHub Pages staging and real Chrome QA include this original tool.
+
+This is a synthetic service-design worksheet, not collected customer research, an operational SLA, employer/client process intelligence or a validated business model. It makes no network calls, uploads, tracking or real-world automation, requires no additional runtime dependencies and does not create another public repository.
