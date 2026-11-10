@@ -356,6 +356,67 @@ def run():
             return document.querySelector('meta[http-equiv="Content-Security-Policy"]')
               .content.includes("connect-src 'none'");
         """) is True,"BLUEPRINT_OFFLINE_CSP")
+        # Offline Agent Approval Gates: explicit deny and recovery, no tool execution.
+        driver.cmd("POST", "url", {"url": f"http://127.0.0.1:{server.server_port}/approval.html"})
+        for _ in range(50):
+            loaded=driver.js("return document.querySelector('#state')?.textContent || '';")
+            if loaded == "PENDING":
+                break
+            time.sleep(0.2)
+        else:
+            raise AssertionError("AGENT_APPROVAL_MODULE_NOT_READY")
+        verify(driver.js("""
+            return document.querySelectorAll('button').length==5 &&
+               document.querySelectorAll('select').length==1 &&
+               performance.getEntriesByType('resource').every(x=>x.name.startsWith(location.origin+'/')) &&
+               document.querySelector('meta[http-equiv="Content-Security-Policy"]')
+                 .content.includes("connect-src 'none'");
+        """) is True,"AGENT_APPROVAL_OFFLINE_BOUNDARY")
+        driver.click("#simulate")
+        blocked=driver.js("""
+            return {state:document.querySelector('#state').textContent,
+                    count:document.querySelector('#counts').textContent,
+                    trail:document.querySelectorAll('#events li').length};
+        """)
+        verify(blocked["state"]=="PENDING" and "1 blocked attempts" in blocked["count"]
+               and blocked["trail"]==1,"AGENT_APPROVAL_BLOCKS_UNAPPROVED_ATTEMPT")
+        driver.click("#approve")
+        verify(driver.js("return document.querySelector('#state').textContent;")=="APPROVED",
+               "AGENT_APPROVAL_EXPLICIT_SIMULATED_APPROVAL")
+        driver.click("#simulate")
+        verify(driver.js("return document.querySelector('#state').textContent;")=="SIMULATED",
+               "AGENT_APPROVAL_DEMO_ONLY_SUCCESS")
+        driver.click("#approve")
+        verify(driver.js("""
+            return document.querySelector('#state').textContent==="SIMULATED" &&
+                   document.querySelectorAll('#events li').length===3 &&
+                   document.querySelector('#notice').textContent.startsWith('Rejected:');
+        """) is True,"AGENT_APPROVAL_INVALID_TRANSITION_IMMUTABLE")
+        driver.js("""
+            const node=document.querySelector('#operation');
+            node.value='WRITE_SIMULATION';
+            node.dispatchEvent(new Event('change',{bubbles:true}));
+        """)
+        driver.click("#approve")
+        verify(driver.js("return document.querySelector('#state').textContent;")=="DENIED",
+               "AGENT_APPROVAL_NONREAD_NEVER_AUTHORIZED")
+        driver.click("#simulate")
+        verify(driver.js("""
+            return document.querySelector('#state').textContent==="DENIED" &&
+                   document.querySelector('#counts').textContent.includes('1 blocked attempts');
+        """) is True,"AGENT_APPROVAL_DENIED_SIMULATE_BLOCKED")
+        driver.click("#reopen")
+        verify(driver.js("return document.querySelector('#state').textContent;")=="PENDING",
+               "AGENT_APPROVAL_RECOVERY_TO_REVIEW")
+        driver.click("#reset")
+        verify(driver.js("""
+            return document.querySelector('#state').textContent==="PENDING" &&
+                   document.querySelector('#operation').value==="READ_FIXTURE" &&
+                   document.activeElement.id==="operation";
+        """) is True,"AGENT_APPROVAL_RESET_NATIVE_FOCUS")
+        driver.viewport(320,720)
+        verify(driver.js("return document.documentElement.scrollWidth<=innerWidth;") is True,
+               "AGENT_APPROVAL_320_LAYOUT")
         return {
             "schema": "flow-browser-smoke.v1",
             "state": "PASSED",
@@ -373,6 +434,7 @@ def run():
                 "no_external_resources",
                 "journey_map_fictional_flags_inert_text_rejection_mobile",
                 "service_blueprint_fictional_handoff_inert_text_rejection_mobile",
+                "agent_approval_denial_recovery_and_offline_320px",
             ],
             "screen_reader_tested": False,
             "wcag_certified": False,
