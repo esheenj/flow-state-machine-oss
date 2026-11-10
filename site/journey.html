@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Map an entirely fictional journey and inspect subjective handoff pain points in your browser.">
+<title>Journey Map Studio · Esheen Labs</title>
+<style>
+:root{font:16px/1.55 system-ui,sans-serif;color-scheme:light dark}
+*{box-sizing:border-box}
+body{background:Canvas;color:CanvasText;margin:0}
+main{max-width:72rem;margin:auto;padding:clamp(1rem,4vw,3rem)}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.1}
+h3{font-size:1.2rem;margin:.4rem 0}
+p{max-width:72ch}
+a{color:LinkText}
+section{border:1px solid GrayText;border-radius:1rem;margin:1rem 0;padding:clamp(1rem,3vw,1.5rem);min-width:0}
+textarea{display:block;width:100%;min-height:20rem;resize:vertical;background:Canvas;color:CanvasText;border:1px solid GrayText;border-radius:.6rem;font:.84rem/1.45 ui-monospace,monospace;padding:1rem}
+button{min-height:48px;padding:.6rem 1rem;background:Canvas;color:CanvasText;border:1px solid GrayText;border-radius:.6rem;font:inherit;cursor:pointer}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin:1rem 0}
+:focus-visible{outline:3px solid Highlight;outline-offset:3px}
+#steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:.8rem}
+#steps li{border:1px solid GrayText;border-radius:.65rem;padding:1rem;min-width:0;overflow-wrap:anywhere}
+#steps small{text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+#steps li p{margin:.5rem 0}
+#status{font-weight:750}
+[hidden]{display:none!important}
+</style>
+<script type="module" src="./src/journey-map-ui.mjs"></script>
+</head><body><main>
+<p><a href="./">Back to Flow State Machine</a></p>
+<p>Esheen Labs · Original offline fictional reference</p>
+<h1>Map a journey, then question the friction.</h1>
+<p>Edit a made-up customer journey and see where subjective negative emotion, high effort and missing help could overlap. This is a worksheet for discussion, not collected field research or measured drop-off.</p>
+<section><h2>1. Describe the imaginary steps</h2>
+<label for="input">JSON journey (2–10 steps, discover / act / recover stages)</label>
+<textarea id="input" spellcheck="false"></textarea>
+<div class="actions"><button id="map" type="button">Map fictional journey</button><button id="reset" type="button">Restore sample</button></div>
+<p id="status" role="status" aria-live="polite"></p></section>
+<section id="summary" hidden>
+<h2>2. Review the illustrated path</h2><p><strong id="effort"></strong></p>
+<ol id="steps"></ol>
+<p>Next evidence needed: observe consenting participants at a real handoff before interpreting these scores.</p>
+</section>
+<section><h2>Clear limitations</h2><p>No uploads, accounts, analytics, third-party assets or automatic actions. Numeric ratings are fictional inputs and cannot prove usability, causality, accessibility or compliance. <a href="https://github.com/esheenj/flow-state-machine-oss">Source and contributions</a>.</p></section>
+</main></body></html>
