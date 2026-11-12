@@ -1,5 +1,9 @@
 # Flow State Machine
 
+**Explore the Esheen Labs gallery:** [Try 28 open-source browser demos and developer playgrounds](https://esheenj.github.io/compound-intelligence-starter/) across seven independent public repositories, including AI agent experiments, UX patterns and tooling. They use fictional examples; 28 demos does **not** mean 28 separate repositories.
+
+**Who this is for:** Explore guarded transitions and replayable workflows through an interactive example.
+
 **[Open the GitHub-deployed workflow/journal playground](https://esheenj.github.io/flow-state-machine-oss/)** — [GitHub Pages deployment](https://github.com/esheenj/flow-state-machine-oss/actions/runs/42580396953) and live HTTPS browser smoke verified on **9 November 2026**. Try the fictional guard, journal and restore journey.
 
 A small, **offline JavaScript state-machine library** for learning about deterministic UI journeys, guarded transitions and validating a serialized history. Entirely synthetic; no accounts, network APIs or dependencies.
