@@ -1,6 +1,6 @@
 # Flow State Machine
 
-**Explore the Esheen Labs gallery:** [Try 28 open-source browser demos and developer playgrounds](https://esheenj.github.io/compound-intelligence-starter/) across seven independent public repositories, including AI agent experiments, UX patterns and tooling. They use fictional examples; 28 demos does **not** mean 28 separate repositories.
+**Explore the Esheen Labs gallery:** [Try 29 open-source browser demos and developer playgrounds](https://esheenj.github.io/compound-intelligence-starter/) across eight independent public repositories, including the new [Agent Capability Policy Lab](https://esheenj.github.io/agent-capability-policy-lab/), AI experiments and UX tooling. All examples are fictional; 29 pages does **not** mean 29 standalone repos (21 add-ons live within the earlier seven).
 
 **Who this is for:** Explore guarded transitions and replayable workflows through an interactive example.
 
