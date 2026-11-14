@@ -1,4 +1,9 @@
-# Flow State Machine
+# UI Workflow State Machine
+
+**Product identity:** **UI Workflow State Machine** describes the existing offline JavaScript model for guarded UI transitions, immutable snapshots, recordable events and deterministic journal replay.
+
+**For:** UX engineers, frontend developers and teams designing recoverable guided interactions. The source uses synthetic workflows and tests locally; it is not a production orchestration service, user-identity system, distributed workflow controller or verified transaction ledger. The existing `flow-state-machine-oss` slug, imports, examples and Pages addresses remain unchanged.
+
 
 **Support this open-source project (optional):** [Esheen Labs crypto support](https://esheenj.github.io/compound-intelligence-starter/support.html) accepts maintainer-supplied BTC on Bitcoin and USDT on Solana, Ethereum/ERC-20 or Tron/TRC-20. The destination addresses are **custodial Pionex exchange deposits** and may change; check the exact network, current address and minimum before sending. Contributions do not buy priority, access or execution authority. All demos and source remain free.
 
