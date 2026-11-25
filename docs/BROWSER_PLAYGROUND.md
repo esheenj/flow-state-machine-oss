@@ -14,6 +14,8 @@ Open **http://127.0.0.1:8000/examples/playground.html** in a modern browser. Ope
 
 The demo uses `src/flow.mjs`, `src/equal_json.mjs`, `src/replay.mjs` and `src/record.mjs` directly, and is fully fictional. Try to Send while the subject is empty: the historical guard rejects it and **nothing is added to the accepted-action journal**. Save a subject, Send to triage, attempt to Resolve before approval, save approval, then Resolve. The state and operation counts update without reloading.
 
+When Send is denied by the empty-subject guard, the live outcome explains how to add a subject, choose **Save subject** and retry **Send to triage**. Focus returns to the subject input; this focus change does not save a field or add an event. The staged Chrome regression uses native Tab/Enter/Space at 320px to verify unchanged denied history, one accepted recovery event and completion with the expected journal counts.
+
 The current JSON is displayed in a read-only field and can be manually copied. Paste it into the restore field and choose **Verify and restore**: `replayJournal` re-runs historical guards and restores accepted state. A malformed journal or rejected guard is refused. The app does not persist browser storage, collect telemetry, invoke third-party APIs or make payments.
 
 ## What is portable?
