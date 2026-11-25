@@ -232,6 +232,11 @@ def run():
         # Independent keyboard-only recovery from a denied send at narrow width.
         driver.cmd("POST", "url", {"url": url})
         driver.viewport(320, 812)
+        driver.cmd("POST", "goog/cdp/execute", {
+            "cmd": "Emulation.setDeviceMetricsOverride",
+            "params": {"width": 320, "height": 812, "deviceScaleFactor": 1, "mobile": False},
+        })
+        verify(driver.js("return innerWidth") == 320, "EXACT_RECOVERY_VIEWPORT_320")
         for _ in range(50):
             if "Start by saving" in state(driver)["status"]:
                 break
@@ -285,6 +290,9 @@ def run():
         verify(driver.js("return document.documentElement.scrollWidth <= innerWidth+1") is True,
                "KEYBOARD_RECOVERY_320_LAYOUT")
 
+        driver.cmd("POST", "goog/cdp/execute", {
+            "cmd": "Emulation.clearDeviceMetricsOverride", "params": {},
+        })
         for width, height in ((375, 812), (1440, 900)):
             driver.viewport(width, height)
             dims = driver.js("""
