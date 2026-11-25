@@ -58,7 +58,13 @@ function record(instruction) {
         ? "The existing recorded operation was reused."
         : "Accepted: " + (instruction.event ?? "field edit") + ". The journal was updated.");
     } else {
-      display("Denied: " + result.reason + ". No event was recorded.", true);
+      if (instruction.kind === "event" && instruction.event === "send"
+          && result.reason === "GUARD_FAILED") {
+        display("Denied: GUARD_FAILED. No event was recorded. Add a fictional subject, choose Save subject, then retry Send to triage.", true);
+        subject.focus();
+      } else {
+        display("Denied: " + result.reason + ". No event was recorded.", true);
+      }
     }
   } catch (error) {
     // Report a generic local validation error, never raw untrusted input.
