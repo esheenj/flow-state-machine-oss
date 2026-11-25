@@ -229,6 +229,70 @@ def run():
                and driver.js("return document.querySelectorAll('script:not([type=module])').length") == 0,
                "INVALID_PASTE_INERT_AND_REJECTED")
 
+        # Independent keyboard-only recovery from a denied send at narrow width.
+        driver.cmd("POST", "url", {"url": url})
+        driver.viewport(320, 812)
+        driver.cmd("POST", "goog/cdp/execute", {
+            "cmd": "Emulation.setDeviceMetricsOverride",
+            "params": {"width": 320, "height": 812, "deviceScaleFactor": 1, "mobile": False},
+        })
+        verify(driver.js("return innerWidth") == 320, "EXACT_RECOVERY_VIEWPORT_320")
+        for _ in range(50):
+            if "Start by saving" in state(driver)["status"]:
+                break
+            time.sleep(0.2)
+        else:
+            raise AssertionError("KEYBOARD_RECOVERY_MODULE_NOT_READY")
+        for _ in range(4):  # skip link, subject, Save subject, Send to triage
+            driver.key("\ue004")
+        verify(driver.js("return document.activeElement.id") == "send",
+               "KEYBOARD_SEND_REACHED")
+        before_denial = state(driver)
+        driver.key("\ue007")
+        denied = state(driver)
+        verify(denied["journal"] == before_denial["journal"]
+               and denied["ops"] == 0 and denied["transitions"] == 0,
+               "KEYBOARD_DENIAL_JOURNAL_UNCHANGED")
+        verify(driver.js("return document.activeElement.id") == "subject"
+               and "Save subject" in denied["status"],
+               "KEYBOARD_DENIAL_ACTIONABLE_SUBJECT_FOCUS")
+        driver.type("#subject", "Fictional keyboard recovery")
+        driver.key("\ue004")
+        verify(driver.js("return document.activeElement.id") == "save-subject",
+               "KEYBOARD_SUBJECT_SAVE_REACHED")
+        driver.key("\ue007")
+        driver.key("\ue004")
+        driver.key("\ue007")
+        recovered = state(driver)
+        entries = json.loads(recovered["journal"])["actions"]
+        verify(recovered["state"] == "triage" and recovered["ops"] == 2
+               and recovered["transitions"] == 1
+               and sum(entry["kind"] == "event" for entry in entries) == 1,
+               "KEYBOARD_RECOVERY_EXACTLY_ONE_ACCEPTED_EVENT")
+        # Continue by native Tab/Space/Enter; do not move focus with page script.
+        for _ in range(12):
+            if driver.js("return document.activeElement.id") == "approved":
+                break
+            driver.key("\ue004")
+        verify(driver.js("return document.activeElement.id") == "approved",
+               "KEYBOARD_APPROVAL_REACHED")
+        driver.key(" ")
+        driver.key("\ue004")
+        verify(driver.js("return document.activeElement.id") == "save-approved",
+               "KEYBOARD_APPROVAL_SAVE_REACHED")
+        driver.key("\ue007")
+        driver.key("\ue004")
+        driver.key("\ue007")
+        completed = state(driver)
+        verify(completed["state"] == "resolved" and completed["ops"] == 4
+               and completed["transitions"] == 2,
+               "KEYBOARD_RECOVERY_JOURNEY_COMPLETED")
+        verify(driver.js("return document.documentElement.scrollWidth <= innerWidth+1") is True,
+               "KEYBOARD_RECOVERY_320_LAYOUT")
+
+        driver.cmd("POST", "goog/cdp/execute", {
+            "cmd": "Emulation.clearDeviceMetricsOverride", "params": {},
+        })
         for width, height in ((375, 812), (1440, 900)):
             driver.viewport(width, height)
             dims = driver.js("""
@@ -426,6 +490,7 @@ def run():
                 "module_import_without_node_builtins",
                 "keyboard_skip_link",
                 "denied_guard_has_no_journal_entry",
+                "keyboard_denial_focus_recovery_320_and_exact_event_counts",
                 "accepted_journal_actions_and_transitions",
                 "restore_from_json",
                 "invalid_json_is_inert",
